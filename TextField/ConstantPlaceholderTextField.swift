@@ -12,28 +12,16 @@ import UIKit
 
     @IBInspectable public var constantText: String = "" {
         didSet {
-            // Update placeholder to get the new value of constantText
+            // Force update placeholder to get the new value of constantText
             if let holder = placeholder {
                 placeholder = holder + ""
             } else {
                 placeholder = ""
             }
-
         }
     }
 
-    // FIX: Do we need @IBInspectable? Or normal placeholder just works.
-    // FIX: Maybe didSet ve willSet kullanilabilir.
-    //        get {
-    //            return _placeholder
-    //        }
-    //        set {
-    //            if let newValue = newValue {
-    //                _placeholder = newValue
-    //                super.placeholder = _placeholder + constantText
-    //            }
-    //        }
-
+    // Investigate if we really need @IBInspectable. Maybe super.placeholder in the storyboard is enough.
     @IBInspectable public override var placeholder: String? {
         didSet {
             if let holder = placeholder {
@@ -44,14 +32,19 @@ import UIKit
         }
     }
 
-//    var _placeholder: String = ""
-
     enum TypingState {
-        case Start, TypedInPlaceholder, TypedInConstantText, TypedEmpty
+        case Start, Typed, TypedEmpty
     }
 
     var typingState = TypingState.Start
 
+    var beginningOfConstantText: UITextPosition? {
+        get {
+            return positionFromPosition(endOfDocument, offset: -count(constantText))
+        }
+    }
+
+    var prevText = ""
 
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -64,71 +57,61 @@ import UIKit
     }
 
     func commonInit() {
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textChanged:", name:
-//            UITextFieldTextDidChangeNotification, object: self)
-
         addTarget(self, action: "textChanged:", forControlEvents: .EditingChanged)
-
+        prevText = text
     }
 
     func textChanged(sender: UITextField) {
-//
-//        // start state
-        if count(text) == 1 {
+        switch typingState {
+        case .Start where count(text) > 0:
             text = text + constantText
-            let beginning = beginningOfDocument
-            goToTextPosition(beginning)
-        }
-//            else if range.location == 0 && range.length == 1 {
-//            textField.text = ""
-//
-//        }
-        else {
-            var reversedText = reverse(text)
-            var i = 0
-            for char in reverse(constantText) {
-                if reversedText[advance(reversedText.startIndex, i)] != char {
-                    reversedText.removeAtIndex(i)
-                    text = String(reversedText)
-                    let placeholderStartingTextPosition = positionFromPosition(endOfDocument, offset: -count(constantText))
-                    goToTextPosition(placeholderStartingTextPosition)
-                    break
-                }
-                i += 1
+            typingState = .Typed
+
+            goToBeginningOfConstantText()
+            prevText = text
+        case .Typed:
+            var endIndexOfText = count(text)
+            var startIndexOfConstantText = endIndexOfText - count(constantText)
+            var shouldBeConstantText = text[startIndexOfConstantText..<endIndexOfText]
+
+            if shouldBeConstantText != constantText {
+                text = prevText
+                goToBeginningOfConstantText()
+            } else {
+                prevText = text
             }
 
+            if text == constantText {
+                typingState = .Start
+                text = ""
+            }
+        default:
+            break
 
         }
-//        let constantStartIndex = count(text) - count(constantText)
-        // Don't change constantPlaceholder
-//        if range.location > constantStartIndex {
-//            let placeholderStartingTextPosition = textField.positionFromPosition(textField.endOfDocument, offset: -count(constantPlaceholder))
-//            goToTextPosition(placeholderStartingTextPosition)
-//            return false
-//        }
+    }
 
-
-
+    func goToBeginningOfConstantText() {
+        if let position = beginningOfConstantText {
+            goToTextPosition(position)
+        }
     }
 
     func goToTextPosition(textPosition: UITextPosition!) {
         selectedTextRange = textRangeFromPosition(textPosition, toPosition: textPosition)
     }
+}
 
+extension String {
+    subscript (i: Int) -> Character {
+        return self[advance(self.startIndex, i)]
+    }
 
-    
-//    func textChanged(notification: NSNotification) {
-//        NSNotificationCenter.defaultCenter().removeObserver(UITextViewTextDidChangeNotification)
-//
-//        text = "mert"
-//
-//
-//
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textChanged:", name: UITextViewTextDidChangeNotification, object: nil)
-//
-//    }
-//
-//    deinit {
-//        NSNotificationCenter.defaultCenter().removeObserver(UITextViewTextDidChangeNotification)
-//    }
+    subscript (i: Int) -> String {
+        return String(self[i] as Character)
+    }
+
+    subscript (r: Range<Int>) -> String {
+        return substringWithRange(Range(start: advance(startIndex, r.startIndex), end: advance(startIndex, r.endIndex)))
+    }
 }
