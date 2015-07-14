@@ -10,9 +10,12 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var gmailTextField: ParkedTextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        gmailTextField.parkedText = "@gmail.com"
+        gmailTextField.placeholder = "account"
     }
 
     @IBAction func valueChanged(sender: ParkedTextField) {
