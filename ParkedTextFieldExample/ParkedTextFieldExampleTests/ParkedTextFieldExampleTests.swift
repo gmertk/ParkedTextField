@@ -1,15 +1,15 @@
 //
-//  TextFieldTests.swift
-//  TextFieldTests
+//  ParkedTextFieldExampleTests.swift
+//  ParkedTextFieldExampleTests
 //
-//  Created by Gunay Mert Karadogan on 13/7/15.
+//  Created by Gunay Mert Karadogan on 14/7/15.
 //  Copyright (c) 2015 Gunay Mert Karadogan. All rights reserved.
 //
 
 import UIKit
 import XCTest
 
-class TextFieldTests: XCTestCase {
+class ParkedTextFieldExampleTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

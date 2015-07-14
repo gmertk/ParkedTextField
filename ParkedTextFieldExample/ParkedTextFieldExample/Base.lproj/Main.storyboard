@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="ParkedTextFieldExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9lp-6j-Efe" customClass="ParkedTextField" customModule="ParkedTextFieldExample" customModuleProvider="target">
+                                <rect key="frame" x="16" y="80" width="568" height="33"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="24"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="constantText" value=".slack.com"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="yourteam"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="valueChanged:" destination="vXZ-lx-hvc" eventType="editingChanged" id="4qN-P0-lP6"/>
+                                </connections>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Gr-69-FYt">
+                                <rect key="frame" x="0.0" y="163" width="600" height="150"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0KU-MS-ZWP" customClass="ParkedTextField" customModule="ParkedTextFieldExample" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="58" width="568" height="33"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="24"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="constantText" value="@gmail.com"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="youraccount"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.3591497541" blue="0.36842127060000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="17x-cl-a5n"/>
+                                    <constraint firstItem="0KU-MS-ZWP" firstAttribute="centerX" secondItem="9Gr-69-FYt" secondAttribute="centerX" id="24o-q4-S8g"/>
+                                    <constraint firstItem="0KU-MS-ZWP" firstAttribute="leading" secondItem="9Gr-69-FYt" secondAttribute="leading" constant="16" id="7LY-M2-yyt"/>
+                                    <constraint firstItem="0KU-MS-ZWP" firstAttribute="top" secondItem="9Gr-69-FYt" secondAttribute="top" constant="58" id="O7K-UZ-d0e"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.38740914125981007" green="0.2828087993922006" blue="0.57809761215092093" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="9lp-6j-Efe" secondAttribute="bottom" constant="491" id="CVN-VQ-Axc"/>
+                            <constraint firstItem="9lp-6j-Efe" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="Lo8-0q-VhE"/>
+                            <constraint firstItem="9Gr-69-FYt" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="Nsl-qf-wzJ"/>
+                            <constraint firstItem="9Gr-69-FYt" firstAttribute="top" secondItem="9lp-6j-Efe" secondAttribute="bottom" constant="50" id="Nvu-jM-QXC"/>
+                            <constraint firstAttribute="trailing" secondItem="9Gr-69-FYt" secondAttribute="trailing" id="VV2-Oq-Bhv"/>
+                            <constraint firstItem="9lp-6j-Efe" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="VyZ-kK-EKn"/>
+                            <constraint firstItem="9lp-6j-Efe" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="60" id="ytG-nz-E2Y"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="CVN-VQ-Axc"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>

@@ -8,9 +8,9 @@
 
 import UIKit
 
-public class ConstantPlaceholderTextField: UITextField {
+public class ParkedTextField: UITextField {
 
-
+    
     // MARK: Properties
 
     /// Constant part of the text. Defaults to "".
