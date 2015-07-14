@@ -14,7 +14,7 @@ public class ParkedTextField: UITextField {
     // MARK: Properties
 
     /// Constant part of the text. Defaults to "".
-    @IBInspectable public var constantText: String = "" {
+    @IBInspectable public var parkedText: String = "" {
         didSet {
             // Force update placeholder to get the new value of constantText
             if let holder = placeholder {
@@ -26,20 +26,24 @@ public class ParkedTextField: UITextField {
     }
 
     /// Constant part of the text. Defaults to the text field's font.
-    public var constantTextFont: UIFont! {
+    public var parkedTextFont: UIFont! {
         didSet {
             textChanged(self)
         }
     }
 
     /// Constant part of the text. Defaults to the text field's textColor.
-    public var constantTextColor: UIColor!
+    @IBInspectable public var parkedTextColor: UIColor! {
+        didSet {
+            textChanged(self)
+        }
+    }
 
-    ///
-    var attributesForConstantText: [String: NSObject] {
+    /// Attributes wrapper for font and color of parkedText
+    var parkedTextAttributes: [String: NSObject] {
         return [
-            NSFontAttributeName: constantTextFont,
-            NSForegroundColorAttributeName: constantTextColor
+            NSFontAttributeName: parkedTextFont,
+            NSForegroundColorAttributeName: parkedTextColor ?? textColor
         ]
     }
 
@@ -47,18 +51,14 @@ public class ParkedTextField: UITextField {
     @IBInspectable public override var placeholder: String? {
         didSet {
             if let holder = placeholder {
-                super.placeholder = holder + constantText
+                super.placeholder = holder + parkedText
             } else {
-                super.placeholder = constantText
+                super.placeholder = parkedText
             }
 
-//            println(super.placeholder)
-//            println(self.placeholder)
-//            println(placeholder)
-
-            let constantTextStartIndex = count(placeholder!) - count(constantText)
+            let constantTextStartIndex = count(placeholder!) - count(parkedText)
             let attributedString = NSMutableAttributedString(string: placeholder!)
-            attributedString.addAttributes(attributesForConstantText, range: NSMakeRange(constantTextStartIndex, count(constantText)))
+            attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(constantTextStartIndex, count(parkedText)))
             attributedPlaceholder = attributedString
         }
     }
@@ -71,7 +71,7 @@ public class ParkedTextField: UITextField {
 
     var beginningOfConstantText: UITextPosition? {
         get {
-            return positionFromPosition(endOfDocument, offset: -count(constantText))
+            return positionFromPosition(endOfDocument, offset: -count(parkedText))
         }
     }
 
@@ -92,15 +92,19 @@ public class ParkedTextField: UITextField {
 
     func commonInit() {
         if let boldFont = bold(font) {
-            constantTextFont = boldFont
+            parkedTextFont = boldFont
         } else {
-            constantTextFont = font
+            parkedTextFont = font
         }
 
-        constantTextColor = textColor
+        parkedTextColor = textColor
 
         addTarget(self, action: "textChanged:", forControlEvents: .EditingChanged)
+
+        text = ""
         prevText = text
+
+        typingState = .Start
     }
 
 
@@ -110,8 +114,8 @@ public class ParkedTextField: UITextField {
         switch typingState {
         case .Start where count(text) > 0:
 
-            let attributedString = NSMutableAttributedString(string: text + constantText)
-            attributedString.addAttributes(attributesForConstantText, range: NSMakeRange(count(text), count(constantText)))
+            let attributedString = NSMutableAttributedString(string: text + parkedText)
+            attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(count(text), count(parkedText)))
             attributedText = attributedString
 
             prevText = text
@@ -121,20 +125,20 @@ public class ParkedTextField: UITextField {
 
         case .Typed:
 
-            if text == constantText {
+            if text == parkedText {
                 typingState = .Start
                 text = ""
                 return
             }
 
             var endIndexOfText = count(text)
-            var startIndexOfConstantText = endIndexOfText - count(constantText)
+            var startIndexOfConstantText = endIndexOfText - count(parkedText)
             var shouldBeConstantText = text[startIndexOfConstantText..<endIndexOfText]
 
             // If change occured in constantText don't accept it. Reset to prevText.
-            if shouldBeConstantText != constantText {
+            if shouldBeConstantText != parkedText {
                 let attributedString = NSMutableAttributedString(string: prevText)
-                attributedString.addAttributes(attributesForConstantText, range: NSMakeRange(count(prevText)-count(constantText), count(constantText)))
+                attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(count(prevText)-count(parkedText), count(parkedText)))
                 attributedText = attributedString
 
                 goToBeginningOfConstantText()
@@ -169,7 +173,6 @@ public class ParkedTextField: UITextField {
             return nil
         }
     }
-
 }
 
 extension String {
