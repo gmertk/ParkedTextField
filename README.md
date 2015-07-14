@@ -24,7 +24,7 @@ pod "ParkedTextField"
 	
 ## Setup
 
-If you want to use storyboards, just drop a TextField into your storyboard and set its class to `ParkedTextField`. Then customize through the attributes inspector. Otherwise, you can write the code to initialize with frame and set the properties.
+If you want to use storyboards, just drop a TextField into your storyboard and set its class to `ParkedTextField`. Then customize through the attributes inspector or code. Otherwise, you can write the code to initialize with frame and set the properties.
 
 ## Properties
 ```swift
@@ -39,6 +39,10 @@ var parkedTextColor: UIColor!
 
 
 ```
+## Development
+* [ ] Instead of subclassing UITextField, investigate making a UITextField extension.
+* [ ] Test with emojis.
+* [ ] Test setting placeholder and text. In some cases it breaks the parkedText.
 
 ## Author
 
