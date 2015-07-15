@@ -14,11 +14,18 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        gmailTextField.parkedText = "@gmail.com"
-        gmailTextField.placeholder = "account"
+//        gmailTextField.parkedText = "@gmail.com"
+
     }
 
     @IBAction func valueChanged(sender: ParkedTextField) {
-        println(sender.text)
+        println("text = " + sender.text)
+        println("typedText = " + sender.notParkedText)
+    }
+
+    @IBAction func changeParkedText(sender: AnyObject) {
+        let parkedTexts = [".slack.com", "@gmail.com", "@hotmail.com", ".facebook.com"]
+
+        gmailTextField.parkedText = parkedTexts[Int(arc4random_uniform(UInt32(parkedTexts.count)))]
     }
 }

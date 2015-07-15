@@ -17,25 +17,33 @@ public class ParkedTextField: UITextField {
     @IBInspectable public var parkedText: String = "" {
         didSet {
             // Force update placeholder to get the new value of constantText
-            if let holder = placeholder {
-                placeholder = holder + ""
-            } else {
-                placeholder = ""
-            }
+            placeholder = placeholderText + parkedText
+        }
+    }
+
+    @IBInspectable public var placeholderText: String = "" {
+        didSet {
+            placeholder = placeholderText + parkedText
+        }
+    }
+
+    @IBInspectable public var notParkedText: String = "" {
+        didSet {
+
         }
     }
 
     /// Constant part of the text. Defaults to the text field's font.
     public var parkedTextFont: UIFont! {
         didSet {
-            textChanged(self)
+            parkedText += ""
         }
     }
 
     /// Constant part of the text. Defaults to the text field's textColor.
     @IBInspectable public var parkedTextColor: UIColor! {
         didSet {
-            textChanged(self)
+            parkedText += ""
         }
     }
 
@@ -47,26 +55,20 @@ public class ParkedTextField: UITextField {
         ]
     }
 
-    // TODO: Investigate if we really need @IBInspectable. Maybe super.placeholder in the storyboard is enough.
-    @IBInspectable public override var placeholder: String? {
+    public override var placeholder: String? {
         didSet {
-            if let holder = placeholder {
-                super.placeholder = holder + parkedText
-            } else {
-                super.placeholder = parkedText
+            if let placeholder = placeholder {
+                let attributedString = NSMutableAttributedString(string: placeholder)
+                let parkedTextRange = NSMakeRange(count(placeholderText), count(parkedText))
+                attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
+                attributedPlaceholder = attributedString
             }
-
-            let constantTextStartIndex = count(placeholder!) - count(parkedText)
-            let attributedString = NSMutableAttributedString(string: placeholder!)
-            attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(constantTextStartIndex, count(parkedText)))
-            attributedPlaceholder = attributedString
         }
     }
 
     enum TypingState {
-        case Start, Typed, TypedEmpty
+        case Start, Typed
     }
-
     var typingState = TypingState.Start
 
     var beginningOfConstantText: UITextPosition? {
@@ -113,7 +115,8 @@ public class ParkedTextField: UITextField {
     func textChanged(sender: UITextField) {
         switch typingState {
         case .Start where count(text) > 0:
-
+            notParkedText = text
+            
             let attributedString = NSMutableAttributedString(string: text + parkedText)
             attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(count(text), count(parkedText)))
             attributedText = attributedString
@@ -124,27 +127,23 @@ public class ParkedTextField: UITextField {
             typingState = .Typed
 
         case .Typed:
-
             if text == parkedText {
                 typingState = .Start
                 text = ""
+                notParkedText = text
                 return
             }
 
-            var endIndexOfText = count(text)
-            var startIndexOfConstantText = endIndexOfText - count(parkedText)
-            var shouldBeConstantText = text[startIndexOfConstantText..<endIndexOfText]
-
-            // If change occured in constantText don't accept it. Reset to prevText.
-            if shouldBeConstantText != parkedText {
+            // Reset to prevText if you tried to change parkedText.
+            if !text.hasSuffix(parkedText) {
                 let attributedString = NSMutableAttributedString(string: prevText)
                 attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(count(prevText)-count(parkedText), count(parkedText)))
                 attributedText = attributedString
-
-                goToBeginningOfConstantText()
             } else {
                 prevText = text
+                notParkedText = text[0..<count(text) - count(parkedText)]
             }
+            goToBeginningOfConstantText()
 
         default:
             break
@@ -153,7 +152,6 @@ public class ParkedTextField: UITextField {
     }
 
     // MARK: Utilites
-
     func goToBeginningOfConstantText() {
         if let position = beginningOfConstantText {
             goToTextPosition(position)
