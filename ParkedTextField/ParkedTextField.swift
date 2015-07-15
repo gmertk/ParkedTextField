@@ -116,9 +116,14 @@ public class ParkedTextField: UITextField {
         switch typingState {
         case .Start where count(text) > 0:
             notParkedText = text
-            
-            let attributedString = NSMutableAttributedString(string: text + parkedText)
-            attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(count(text), count(parkedText)))
+
+            let newText = text + parkedText
+
+            let range = newText.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil)
+            let nsrange = NSRangeFromRange(newText, range: range!)
+
+            let attributedString = NSMutableAttributedString(string: newText)
+            attributedString.addAttributes(parkedTextAttributes, range: nsrange)
             attributedText = attributedString
 
             prevText = text
@@ -137,11 +142,16 @@ public class ParkedTextField: UITextField {
             // Reset to prevText if you tried to change parkedText.
             if !text.hasSuffix(parkedText) {
                 let attributedString = NSMutableAttributedString(string: prevText)
-                attributedString.addAttributes(parkedTextAttributes, range: NSMakeRange(count(prevText)-count(parkedText), count(parkedText)))
+
+                let range = prevText.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil)
+                let nsrange = NSRangeFromRange(prevText, range: range!)
+
+                attributedString.addAttributes(parkedTextAttributes, range: nsrange)
                 attributedText = attributedString
             } else {
                 prevText = text
-                notParkedText = text[0..<count(text) - count(parkedText)]
+
+                notParkedText = text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
             }
             goToBeginningOfConstantText()
 
@@ -152,6 +162,15 @@ public class ParkedTextField: UITextField {
     }
 
     // MARK: Utilites
+
+    /// http://stackoverflow.com/questions/25138339/nsrange-to-rangestring-index
+    func NSRangeFromRange(text:String, range : Range<String.Index>) -> NSRange {
+        let utf16view = text.utf16
+        let from = String.UTF16View.Index(range.startIndex, within: utf16view)
+        let to = String.UTF16View.Index(range.endIndex, within: utf16view)
+        return NSMakeRange(from - utf16view.startIndex, to - from)
+    }
+
     func goToBeginningOfConstantText() {
         if let position = beginningOfConstantText {
             goToTextPosition(position)
@@ -170,19 +189,5 @@ public class ParkedTextField: UITextField {
         } else {
             return nil
         }
-    }
-}
-
-extension String {
-    subscript (i: Int) -> Character {
-        return self[advance(self.startIndex, i)]
-    }
-
-    subscript (i: Int) -> String {
-        return String(self[i] as Character)
-    }
-
-    subscript (r: Range<Int>) -> String {
-        return substringWithRange(Range(start: advance(startIndex, r.startIndex), end: advance(startIndex, r.endIndex)))
     }
 }
