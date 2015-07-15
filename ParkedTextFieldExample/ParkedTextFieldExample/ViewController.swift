@@ -10,13 +10,14 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var slackTextField: ParkedTextField!
     @IBOutlet weak var gmailTextField: ParkedTextField!
     var i = 0, j = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        gmailTextField.parkedText = "@gmail.com"
-
+        slackTextField.parkedText = ".slack.com"
+        slackTextField.placeholderText = "yourteam"
     }
 
     @IBAction func valueChanged(sender: ParkedTextField) {
@@ -25,7 +26,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func changeParkedText(sender: AnyObject) {
-        let texts = [".slack.com", "@gmail.com", "@hotmail.com", ".facebook.com"]
+        let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
 
         gmailTextField.parkedText = texts[j]
 
@@ -34,7 +35,7 @@ class ViewController: UIViewController {
 
 
     @IBAction func changeNotParkedText(sender: AnyObject) {
-        let texts = ["what", "me", "you", "id"]
+        let texts = ["ios-developers", "larry", "bill", "mark"]
 
         gmailTextField.typedText = texts[i]
 

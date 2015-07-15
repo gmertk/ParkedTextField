@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ParkedTextField"
-  s.version          = "0.0.1"
+  s.version          = "0.1.0"
   s.summary          = "A UITextField subclass with an appended constant text"
   s.homepage         = "https://github.com/gmertk/ParkedTextField"
   s.screenshots      = "https://dl.dropboxusercontent.com/u/4397140/pod-screenshots/ParkedTextField.gif"

@@ -28,10 +28,16 @@ If you want to use storyboards, just drop a TextField into your storyboard and s
 
 ## Properties
 ```swift
-/// Constant text in the end of text field. Defaults to "".
+/// Constant text. Defaults to "".
 var parkedText: String = ".slack.com" 
 
-/// Font of parkedText. Defaults the text field's font or its bold version if it exists. 
+/// Placeholder next to parkedText. Defaults to "".
+var placeholderText: String = "yourteam" 
+
+/// Variable part of the text. Defaults to "".
+var typedText: String
+
+/// Font of parkedText. Defaults to bold version of the text field's font if it exists. If not, defaults to the font of the text field.
 var parkedTextFont: UIFont!
 
 /// Color of parkedText. Defaults the font's color.

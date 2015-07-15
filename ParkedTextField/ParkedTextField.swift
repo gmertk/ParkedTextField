@@ -13,23 +13,30 @@ public class ParkedTextField: UITextField {
     // MARK: Properties
 
     /// Constant part of the text. Defaults to "".
-    @IBInspectable public var parkedText: String = "" {
-        didSet {
-            // Force update placeholder to get the new value of constantText
-            placeholder = placeholderText + parkedText
+    @IBInspectable public var parkedText: String {
+        get {
+            return _parkedText
+        }
+        set {
             if !text.isEmpty {
-                prevText = typedText + parkedText
-                textChanged(self)
-            }
-        }
-    }
+                let typed = text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+                text = typed + newValue
 
-    @IBInspectable public var placeholderText: String = "" {
-        didSet {
+                prevText =  text
+                _parkedText = newValue
+                
+                textChanged(self)
+            } else {
+                _parkedText = newValue
+            }
+
+            // Force update placeholder to get the new value of parkedText
             placeholder = placeholderText + parkedText
         }
     }
+    var _parkedText = ""
 
+    /// Variable part of the text. Defaults to "".
     @IBInspectable public var typedText: String {
         get {
             if text.hasSuffix(parkedText) {
@@ -43,6 +50,14 @@ public class ParkedTextField: UITextField {
             textChanged(self)
         }
     }
+
+    /// Placeholder before parkedText. Defaults to "".
+    @IBInspectable public var placeholderText: String = "" {
+        didSet {
+            placeholder = placeholderText + parkedText
+        }
+    }
+
 
     /// Constant part of the text. Defaults to the text field's font.
     public var parkedTextFont: UIFont! {
