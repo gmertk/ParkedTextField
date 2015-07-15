@@ -10,7 +10,6 @@ import UIKit
 
 public class ParkedTextField: UITextField {
 
-    
     // MARK: Properties
 
     /// Constant part of the text. Defaults to "".
@@ -18,6 +17,10 @@ public class ParkedTextField: UITextField {
         didSet {
             // Force update placeholder to get the new value of constantText
             placeholder = placeholderText + parkedText
+            if !text.isEmpty {
+                prevText = typedText + parkedText
+                textChanged(self)
+            }
         }
     }
 
@@ -27,9 +30,17 @@ public class ParkedTextField: UITextField {
         }
     }
 
-    @IBInspectable public var notParkedText: String = "" {
-        didSet {
-
+    @IBInspectable public var typedText: String {
+        get {
+            if text.hasSuffix(parkedText) {
+                return text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+            } else {
+                return text
+            }
+        }
+        set {
+            text = newValue + parkedText
+            textChanged(self)
         }
     }
 
@@ -115,17 +126,8 @@ public class ParkedTextField: UITextField {
     func textChanged(sender: UITextField) {
         switch typingState {
         case .Start where count(text) > 0:
-            notParkedText = text
-
-            let newText = text + parkedText
-
-            let range = newText.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil)
-            let nsrange = NSRangeFromRange(newText, range: range!)
-
-            let attributedString = NSMutableAttributedString(string: newText)
-            attributedString.addAttributes(parkedTextAttributes, range: nsrange)
-            attributedText = attributedString
-
+            text = typedText + parkedText
+            updateAttributedTextWith(text)
             prevText = text
             goToBeginningOfConstantText()
 
@@ -135,24 +137,14 @@ public class ParkedTextField: UITextField {
             if text == parkedText {
                 typingState = .Start
                 text = ""
-                notParkedText = text
                 return
             }
 
             // Reset to prevText if you tried to change parkedText.
-            if !text.hasSuffix(parkedText) {
-                let attributedString = NSMutableAttributedString(string: prevText)
-
-                let range = prevText.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil)
-                let nsrange = NSRangeFromRange(prevText, range: range!)
-
-                attributedString.addAttributes(parkedTextAttributes, range: nsrange)
-                attributedText = attributedString
-            } else {
+            if text.hasSuffix(parkedText) {
                 prevText = text
-
-                notParkedText = text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
             }
+            updateAttributedTextWith(prevText)
             goToBeginningOfConstantText()
 
         default:
@@ -162,6 +154,16 @@ public class ParkedTextField: UITextField {
     }
 
     // MARK: Utilites
+    func updateAttributedTextWith(text: String) {
+        if let parkedTextRange = text.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil) {
+            let nsRange = NSRangeFromRange(text, range: parkedTextRange)
+
+            let attributedString = NSMutableAttributedString(string: text)
+            attributedString.addAttributes(parkedTextAttributes, range: nsRange)
+
+            attributedText = attributedString
+        }
+    }
 
     /// http://stackoverflow.com/questions/25138339/nsrange-to-rangestring-index
     func NSRangeFromRange(text:String, range : Range<String.Index>) -> NSRange {

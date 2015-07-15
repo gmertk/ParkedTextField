@@ -41,7 +41,6 @@ var parkedTextColor: UIColor!
 ```
 ## Development
 * [ ] Instead of subclassing UITextField, investigate making a UITextField extension.
-* [ ] Test with emojis.
 * [ ] Test setting placeholder and text. In some cases it breaks the parkedText.
 
 ## Author

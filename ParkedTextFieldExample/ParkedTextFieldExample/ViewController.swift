@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var gmailTextField: ParkedTextField!
+    var i = 0, j = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,12 +21,23 @@ class ViewController: UIViewController {
 
     @IBAction func valueChanged(sender: ParkedTextField) {
         println("text = " + sender.text)
-        println("typedText = " + sender.notParkedText)
+        println("typedText = " + sender.typedText)
     }
 
     @IBAction func changeParkedText(sender: AnyObject) {
-        let parkedTexts = [".slack.com", "@gmail.com", "@hotmail.com", ".facebook.com"]
+        let texts = [".slack.com", "@gmail.com", "@hotmail.com", ".facebook.com"]
 
-        gmailTextField.parkedText = parkedTexts[Int(arc4random_uniform(UInt32(parkedTexts.count)))]
+        gmailTextField.parkedText = texts[j]
+
+        j = (j + 1) % texts.count
+    }
+
+
+    @IBAction func changeNotParkedText(sender: AnyObject) {
+        let texts = ["what", "me", "you", "id"]
+
+        gmailTextField.typedText = texts[i]
+
+        i = (i + 1) % texts.count
     }
 }
