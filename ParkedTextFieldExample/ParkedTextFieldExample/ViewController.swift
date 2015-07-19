@@ -26,8 +26,8 @@ class ViewController: UIViewController {
     }
 
     @IBAction func changeParkedText(sender: AnyObject) {
-        let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
-
+//        let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
+        let texts = ["beginning", "start", "lawl"]
         gmailTextField.parkedText = texts[j]
 
         j = (j + 1) % texts.count
