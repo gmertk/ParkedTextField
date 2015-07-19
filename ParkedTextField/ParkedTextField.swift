@@ -107,7 +107,7 @@ public class ParkedTextField: UITextField {
                 if parkedTextAtEnd {
                     parkedTextRange = NSMakeRange(count(placeholderText), count(parkedText))
                 } else {
-                    parkedTextRange = NSMakeRange(count(parkedText), count(placeholderText))
+                    parkedTextRange = NSMakeRange(0, count(parkedText))
                 }
                 attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
                 attributedPlaceholder = attributedString
