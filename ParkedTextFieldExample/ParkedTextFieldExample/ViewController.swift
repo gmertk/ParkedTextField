@@ -19,6 +19,12 @@ class ViewController: UIViewController {
         slackTextField.parkedText = ".slack.com"
         slackTextField.placeholderText = "yourteam"
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        // For this to work right, we have to force `didSet` to be called
+        gmailTextField.placeholderText = "placeholder"
+    }
 
     @IBAction func valueChanged(sender: ParkedTextField) {
         println("text = " + sender.text)
@@ -26,8 +32,8 @@ class ViewController: UIViewController {
     }
 
     @IBAction func changeParkedText(sender: AnyObject) {
-        let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
-
+//        let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
+        let texts = ["beginning", "start", "lawl"]
         gmailTextField.parkedText = texts[j]
 
         j = (j + 1) % texts.count

@@ -11,6 +11,8 @@ import UIKit
 public class ParkedTextField: UITextField {
 
     // MARK: Properties
+    /// Constant part of the text location. Defaults to `true`
+    @IBInspectable public var parkedTextAtEnd: Bool = true
 
     /// Constant part of the text. Defaults to "".
     @IBInspectable public var parkedText: String {
@@ -19,7 +21,8 @@ public class ParkedTextField: UITextField {
         }
         set {
             if !text.isEmpty {
-                let typed = text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+                
+                let typed = parkedTextAtEnd ? text[text.startIndex..<advance(text.endIndex, -count(parkedText))] : text[parkedText.endIndex..<text.endIndex]
                 text = typed + newValue
 
                 prevText =  text
@@ -31,7 +34,7 @@ public class ParkedTextField: UITextField {
             }
 
             // Force update placeholder to get the new value of parkedText
-            placeholder = placeholderText + parkedText
+            placeholder = parkedTextAtEnd ? placeholderText + parkedText : parkedText + placeholderText
         }
     }
     var _parkedText = ""
@@ -39,14 +42,22 @@ public class ParkedTextField: UITextField {
     /// Variable part of the text. Defaults to "".
     @IBInspectable public var typedText: String {
         get {
-            if text.hasSuffix(parkedText) {
-                return text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+            if parkedTextAtEnd {
+                if text.hasSuffix(parkedText) {
+                    return text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+                } else {
+                    return text
+                }
             } else {
-                return text
+                if text.hasPrefix(parkedText) {
+                    return text[parkedText.endIndex..<text.endIndex]
+                } else {
+                    return text
+                }
             }
         }
         set {
-            text = newValue + parkedText
+            text = (parkedTextAtEnd) ? newValue + parkedText : parkedText + newValue
             textChanged(self)
         }
     }
@@ -54,7 +65,7 @@ public class ParkedTextField: UITextField {
     /// Placeholder before parkedText. Defaults to "".
     @IBInspectable public var placeholderText: String = "" {
         didSet {
-            placeholder = placeholderText + parkedText
+            placeholder = parkedTextAtEnd ? (placeholderText + parkedText) : (parkedText + placeholderText)
         }
     }
 
@@ -80,12 +91,24 @@ public class ParkedTextField: UITextField {
             NSForegroundColorAttributeName: parkedTextColor ?? textColor
         ]
     }
+    
+    var typedTextAttributes: [String: NSObject] {
+        return [
+            NSFontAttributeName: self.font,
+            NSForegroundColorAttributeName: textColor
+        ]
+    }
 
     public override var placeholder: String? {
         didSet {
             if let placeholder = placeholder {
                 let attributedString = NSMutableAttributedString(string: placeholder)
-                let parkedTextRange = NSMakeRange(count(placeholderText), count(parkedText))
+                let parkedTextRange: NSRange
+                if parkedTextAtEnd {
+                    parkedTextRange = NSMakeRange(count(placeholderText), count(parkedText))
+                } else {
+                    parkedTextRange = NSMakeRange(0, count(parkedText))
+                }
                 attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
                 attributedPlaceholder = attributedString
             }
@@ -99,7 +122,9 @@ public class ParkedTextField: UITextField {
 
     var beginningOfConstantText: UITextPosition? {
         get {
-            return positionFromPosition(endOfDocument, offset: -count(parkedText))
+            return parkedTextAtEnd ?
+                positionFromPosition(endOfDocument, offset: -count(parkedText))
+                : beginningOfDocument
         }
     }
 
@@ -141,10 +166,10 @@ public class ParkedTextField: UITextField {
     func textChanged(sender: UITextField) {
         switch typingState {
         case .Start where count(text) > 0:
-            text = typedText + parkedText
+            text = parkedTextAtEnd ? typedText + parkedText : parkedText + typedText
             updateAttributedTextWith(text)
             prevText = text
-            goToBeginningOfConstantText()
+            parkedTextAtEnd ? goToBeginningOfConstantText() : goToEndOfText()
 
             typingState = .Typed
 
@@ -156,11 +181,17 @@ public class ParkedTextField: UITextField {
             }
 
             // Reset to prevText if you tried to change parkedText.
-            if text.hasSuffix(parkedText) {
-                prevText = text
+            if parkedTextAtEnd {
+                if text.hasSuffix(parkedText) {
+                    prevText = text
+                }
+            } else {
+                if text.hasPrefix(parkedText) {
+                    prevText = text
+                }
             }
             updateAttributedTextWith(prevText)
-            goToBeginningOfConstantText()
+            parkedTextAtEnd ? goToBeginningOfConstantText() : goToEndOfText()
 
         default:
             break
@@ -170,12 +201,17 @@ public class ParkedTextField: UITextField {
 
     // MARK: Utilites
     func updateAttributedTextWith(text: String) {
-        if let parkedTextRange = text.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil) {
+        if let parkedTextRange = text.rangeOfString(parkedText, options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil, locale: nil) {
             let nsRange = NSRangeFromRange(text, range: parkedTextRange)
 
             let attributedString = NSMutableAttributedString(string: text)
             attributedString.addAttributes(parkedTextAttributes, range: nsRange)
-
+            if !parkedTextAtEnd {
+                if let typedTextRange = text.rangeOfString(typedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil) {
+                    attributedString.addAttributes(typedTextAttributes, range: NSRangeFromRange(text, range:typedTextRange))
+                }
+            }
+            
             attributedText = attributedString
         }
     }
@@ -192,6 +228,9 @@ public class ParkedTextField: UITextField {
         if let position = beginningOfConstantText {
             goToTextPosition(position)
         }
+    }
+    func goToEndOfText() {
+        goToTextPosition(endOfDocument)
     }
 
     func goToTextPosition(textPosition: UITextPosition!) {
