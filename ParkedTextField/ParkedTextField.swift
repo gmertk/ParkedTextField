@@ -1,5 +1,5 @@
 //
-//  ConstantPlaceholderTextField.swift
+//  ParkedTextField.swift
 //  TextField
 //
 //  Created by Gunay Mert Karadogan on 13/7/15.
@@ -97,7 +97,7 @@ public class ParkedTextField: UITextField {
     }
     var typingState = TypingState.Start
 
-    var beginningOfConstantText: UITextPosition? {
+    var beginningOfParkedText: UITextPosition? {
         get {
             return positionFromPosition(endOfDocument, offset: -count(parkedText))
         }
@@ -144,7 +144,7 @@ public class ParkedTextField: UITextField {
             text = typedText + parkedText
             updateAttributedTextWith(text)
             prevText = text
-            goToBeginningOfConstantText()
+            goToBeginningOfParkedText()
 
             typingState = .Typed
 
@@ -155,12 +155,12 @@ public class ParkedTextField: UITextField {
                 return
             }
 
-            // Reset to prevText if you tried to change parkedText.
+            // If the parkedText has changed, don't update prevText.
             if text.hasSuffix(parkedText) {
                 prevText = text
             }
             updateAttributedTextWith(prevText)
-            goToBeginningOfConstantText()
+            goToBeginningOfParkedText()
 
         default:
             break
@@ -188,8 +188,8 @@ public class ParkedTextField: UITextField {
         return NSMakeRange(from - utf16view.startIndex, to - from)
     }
 
-    func goToBeginningOfConstantText() {
-        if let position = beginningOfConstantText {
+    func goToBeginningOfParkedText() {
+        if let position = beginningOfParkedText {
             goToTextPosition(position)
         }
     }
