@@ -168,6 +168,7 @@
 		31C158B31B555A4400DD259B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Gunay Mert Karadogan";
