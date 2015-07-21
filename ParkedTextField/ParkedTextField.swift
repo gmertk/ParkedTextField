@@ -86,8 +86,10 @@ public class ParkedTextField: UITextField {
             if let placeholder = placeholder {
                 let attributedString = NSMutableAttributedString(string: placeholder)
                 let parkedTextRange = NSMakeRange(count(placeholderText), count(parkedText))
-                attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
-                attributedPlaceholder = attributedString
+                if placeholder.hasSuffix(parkedText) {
+                    attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
+                    attributedPlaceholder = attributedString
+                }
             }
         }
     }
