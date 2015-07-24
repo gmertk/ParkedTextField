@@ -2,6 +2,7 @@
 [![Version](https://img.shields.io/cocoapods/v/ParkedTextField.svg?style=flat)](http://cocoapods.org/pods/ParkedTextField)
 [![License](https://img.shields.io/cocoapods/l/ParkedTextField.svg?style=flat)](http://cocoapods.org/pods/ParkedTextField)
 [![Platform](https://img.shields.io/cocoapods/p/ParkedTextField.svg?style=flat)](http://cocoapods.org/pods/ParkedTextField)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 A text field subclass with a constant text in the end. 
 
@@ -14,14 +15,20 @@ Main functionality works. It is still under development.
 
 ## Usage
 
-ParkedTextField is available through [CocoaPods](http://cocoapods.org). To install
+ParkedTextField is available through [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/carthage/carthage). To install
 it, simply add the following lines to your Podfile:
 
 ```ruby
 use_frameworks!
 pod "ParkedTextField"
 ```
-	
+
+Or add the following lines to your Cartfile:
+
+```bash
+github "gmertk/ParkedTextField" "master"
+``` 
+
 ## Setup
 
 If you want to use storyboards, just drop a TextField into your storyboard and set its class to `ParkedTextField`. Then customize through the attributes inspector or code. Otherwise, you can write the code to initialize with frame and set the properties.
