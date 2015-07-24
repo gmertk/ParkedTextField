@@ -1,8 +1,8 @@
 # ParkedTextField
 [![Version](https://img.shields.io/cocoapods/v/ParkedTextField.svg?style=flat)](http://cocoapods.org/pods/ParkedTextField)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![License](https://img.shields.io/cocoapods/l/ParkedTextField.svg?style=flat)](http://cocoapods.org/pods/ParkedTextField)
 [![Platform](https://img.shields.io/cocoapods/p/ParkedTextField.svg?style=flat)](http://cocoapods.org/pods/ParkedTextField)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 A text field subclass with a constant text in the end. 
 
