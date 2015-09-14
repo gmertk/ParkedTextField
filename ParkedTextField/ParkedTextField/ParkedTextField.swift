@@ -18,11 +18,14 @@ public class ParkedTextField: UITextField {
             return _parkedText
         }
         set {
-            if !text!.isEmpty {
-                let typed = text![text!.startIndex..<advance(text!.endIndex, -self.parkedText.characters.count)]
+            guard var text = text else {
+                return
+            }
+            if !text.isEmpty {
+                let typed = text[text.startIndex..<text.endIndex.advancedBy(-self.parkedText.characters.count)]
                 text = typed + newValue
 
-                prevText =  text!
+                prevText =  text
                 _parkedText = newValue
                 
                 textChanged(self)
@@ -39,10 +42,13 @@ public class ParkedTextField: UITextField {
     /// Variable part of the text. Defaults to "".
     @IBInspectable public var typedText: String {
         get {
-            if text!.hasSuffix(parkedText) {
-                return text![text!.startIndex..<advance(text!.endIndex, -parkedText.characters.count)]
+            guard let text = text else {
+                return ""
+            }
+            if text.hasSuffix(parkedText) {
+                return text[text.startIndex..<text.endIndex.advancedBy(-parkedText.characters.count)]
             } else {
-                return text!
+                return text
             }
         }
         set {
@@ -188,7 +194,9 @@ public class ParkedTextField: UITextField {
         let utf16view = text.utf16
         let from = String.UTF16View.Index(range.startIndex, within: utf16view)
         let to = String.UTF16View.Index(range.endIndex, within: utf16view)
-        return NSMakeRange(from - utf16view.startIndex, to - from)
+        let loc = utf16view.startIndex.distanceTo(from)
+        let len = from.distanceTo(to)
+        return NSMakeRange(loc, len)
     }
 
     func goToBeginningOfParkedText() {
