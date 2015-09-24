@@ -23,8 +23,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func valueChanged(sender: ParkedTextField) {
-        println("text = " + sender.text)
-        println("typedText = " + sender.typedText)
+        print("text = " + sender.text!)
+        print("typedText = " + sender.typedText)
     }
     
     @IBAction func changeParkedText(sender: AnyObject) {

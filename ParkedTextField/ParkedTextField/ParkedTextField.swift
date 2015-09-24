@@ -18,8 +18,11 @@ public class ParkedTextField: UITextField {
             return _parkedText
         }
         set {
+            guard var text = text else {
+                return
+            }
             if !text.isEmpty {
-                let typed = text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+                let typed = text[text.startIndex..<text.endIndex.advancedBy(-self.parkedText.characters.count)]
                 text = typed + newValue
 
                 prevText =  text
@@ -39,8 +42,11 @@ public class ParkedTextField: UITextField {
     /// Variable part of the text. Defaults to "".
     @IBInspectable public var typedText: String {
         get {
+            guard let text = text else {
+                return ""
+            }
             if text.hasSuffix(parkedText) {
-                return text[text.startIndex..<advance(text.endIndex, -count(parkedText))]
+                return text[text.startIndex..<text.endIndex.advancedBy(-parkedText.characters.count)]
             } else {
                 return text
             }
@@ -85,7 +91,7 @@ public class ParkedTextField: UITextField {
         didSet {
             if let placeholder = placeholder {
                 let attributedString = NSMutableAttributedString(string: placeholder)
-                let parkedTextRange = NSMakeRange(count(placeholderText), count(parkedText))
+                let parkedTextRange = NSMakeRange(placeholderText.characters.count, parkedText.characters.count)
                 if placeholder.hasSuffix(parkedText) {
                     attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
                     attributedPlaceholder = attributedString
@@ -101,7 +107,7 @@ public class ParkedTextField: UITextField {
 
     var beginningOfParkedText: UITextPosition? {
         get {
-            return positionFromPosition(endOfDocument, offset: -count(parkedText))
+            return positionFromPosition(endOfDocument, offset: -parkedText.characters.count)
         }
     }
 
@@ -110,7 +116,7 @@ public class ParkedTextField: UITextField {
 
     // MARK: Initialization
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -121,8 +127,9 @@ public class ParkedTextField: UITextField {
     }
 
     func commonInit() {
-        if let boldFont = bold(font) {
-            parkedTextFont = boldFont
+        
+        if let boldFont = font {
+            parkedTextFont = bold(boldFont)
         } else {
             parkedTextFont = font
         }
@@ -132,7 +139,7 @@ public class ParkedTextField: UITextField {
         addTarget(self, action: "textChanged:", forControlEvents: .EditingChanged)
 
         text = ""
-        prevText = text
+        prevText = text!
 
         typingState = .Start
     }
@@ -142,10 +149,10 @@ public class ParkedTextField: UITextField {
 
     func textChanged(sender: UITextField) {
         switch typingState {
-        case .Start where count(text) > 0:
+        case .Start where text!.characters.count > 0:
             text = typedText + parkedText
-            updateAttributedTextWith(text)
-            prevText = text
+            updateAttributedTextWith(text!)
+            prevText = text!
             goToBeginningOfParkedText()
 
             typingState = .Typed
@@ -158,8 +165,8 @@ public class ParkedTextField: UITextField {
             }
 
             // If the parkedText has changed, don't update prevText.
-            if text.hasSuffix(parkedText) {
-                prevText = text
+            if text!.hasSuffix(parkedText) {
+                prevText = text!
             }
             updateAttributedTextWith(prevText)
             goToBeginningOfParkedText()
@@ -187,7 +194,9 @@ public class ParkedTextField: UITextField {
         let utf16view = text.utf16
         let from = String.UTF16View.Index(range.startIndex, within: utf16view)
         let to = String.UTF16View.Index(range.endIndex, within: utf16view)
-        return NSMakeRange(from - utf16view.startIndex, to - from)
+        let loc = utf16view.startIndex.distanceTo(from)
+        let len = from.distanceTo(to)
+        return NSMakeRange(loc, len)
     }
 
     func goToBeginningOfParkedText() {
@@ -200,13 +209,8 @@ public class ParkedTextField: UITextField {
         selectedTextRange = textRangeFromPosition(textPosition, toPosition: textPosition)
     }
 
-    func bold(font: UIFont) -> UIFont? {
+    func bold(font: UIFont) -> UIFont {
         let descriptor = font.fontDescriptor().fontDescriptorWithSymbolicTraits(UIFontDescriptorSymbolicTraits.TraitBold)
-
-        if let descriptor = descriptor {
-            return UIFont(descriptor: descriptor, size: 0)
-        } else {
-            return nil
-        }
+        return UIFont(descriptor: descriptor, size: 0)
     }
 }
