@@ -211,6 +211,6 @@ public class ParkedTextField: UITextField {
 
     func bold(font: UIFont) -> UIFont {
         let descriptor = font.fontDescriptor().fontDescriptorWithSymbolicTraits(UIFontDescriptorSymbolicTraits.TraitBold)
-        return UIFont(descriptor: descriptor, size: 0)
+        return UIFont(descriptor: descriptor!, size: 0)
     }
 }
