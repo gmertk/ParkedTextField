@@ -12,6 +12,21 @@ open class ParkedTextField: UITextField {
 
     // MARK: Properties
 
+	let border = CALayer()
+	
+	@IBInspectable var borderColor: UIColor = UIColor.white {
+		didSet {
+			setupBorder()
+		}
+	}
+	
+	@IBInspectable var borderWidth: CGFloat = 2 {
+		didSet {
+			setupBorder()
+		}
+	}
+	
+	
     /// Constant part of the text. Defaults to "".
     @IBInspectable open var parkedText: String {
         get {
@@ -119,11 +134,13 @@ open class ParkedTextField: UITextField {
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
+		setupBorder()
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
+		setupBorder()
     }
 
     func commonInit() {
@@ -142,7 +159,18 @@ open class ParkedTextField: UITextField {
         prevText = text!
 
         typingState = .start
+		
     }
+	
+	func setupBorder() {
+		border.borderColor = self.borderColor.cgColor
+		
+		border.borderWidth = borderWidth
+		border.cornerRadius = borderWidth/2
+		border.masksToBounds = true
+		self.layer.addSublayer(border)
+		self.layer.masksToBounds = true
+	}
 
 
     // MARK: EditingChanged handler
@@ -215,4 +243,23 @@ open class ParkedTextField: UITextField {
         let descriptor = font.fontDescriptor.withSymbolicTraits(UIFontDescriptorSymbolicTraits.traitBold)
         return UIFont(descriptor: descriptor!, size: 0)
     }
+	
+	
+	override open func layoutSubviews() {
+		super.layoutSubviews()
+		border.frame = CGRect(x: 0, y: self.frame.size.height - borderWidth, width:  self.frame.size.width, height: borderWidth)
+	}
+	
+	override open func textRect(forBounds bounds: CGRect) -> CGRect {
+		return editingRect(forBounds: bounds)
+	}
+	
+	override open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+		return editingRect(forBounds: bounds)
+	}
+	
+	override open func editingRect(forBounds bounds: CGRect) -> CGRect {
+		return bounds.insetBy(dx: 20, dy: 0)
+	}
+
 }
