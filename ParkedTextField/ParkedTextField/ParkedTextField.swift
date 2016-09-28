@@ -95,7 +95,7 @@ open class ParkedTextField: UITextField {
     }
 
     /// Attributes wrapper for font and color of parkedText
-    var parkedTextAttributes: [String: NSObject] {
+    open var parkedTextAttributes: [String: NSObject] {
         return [
             NSFontAttributeName: parkedTextFont,
             NSForegroundColorAttributeName: parkedTextColor ?? textColor!
