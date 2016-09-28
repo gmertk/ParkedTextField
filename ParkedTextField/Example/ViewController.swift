@@ -22,12 +22,12 @@ class ViewController: UIViewController {
         slackTextField.placeholderText = "yourteam"
     }
     
-    @IBAction func valueChanged(sender: ParkedTextField) {
+    @IBAction func valueChanged(_ sender: ParkedTextField) {
         print("text = " + sender.text!)
         print("typedText = " + sender.typedText)
     }
     
-    @IBAction func changeParkedText(sender: AnyObject) {
+    @IBAction func changeParkedText(_ sender: AnyObject) {
         let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
         gmailTextField.parkedText = texts[j]
         
@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     }
     
     
-    @IBAction func changeNotParkedText(sender: AnyObject) {
+    @IBAction func changeNotParkedText(_ sender: AnyObject) {
         let texts = ["ios-developers", "larry", "bill", "mark"]
         gmailTextField.typedText = texts[i]
         
