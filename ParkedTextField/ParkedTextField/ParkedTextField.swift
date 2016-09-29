@@ -14,13 +14,13 @@ open class ParkedTextField: UITextField {
 
 	let border = CALayer()
 	
-	@IBInspectable var borderColor: UIColor = UIColor.white {
+	@IBInspectable open var borderColor: UIColor = UIColor.purple {
 		didSet {
 			setupBorder()
 		}
-	}
+	} 
 	
-	@IBInspectable var borderWidth: CGFloat = 2 {
+	@IBInspectable open var borderWidth: CGFloat = 10 {
 		didSet {
 			setupBorder()
 		}
@@ -97,8 +97,8 @@ open class ParkedTextField: UITextField {
     /// Attributes wrapper for font and color of parkedText
     open var parkedTextAttributes: [String: NSObject] {
         return [
-            NSFontAttributeName: parkedTextFont,
-            NSForegroundColorAttributeName: parkedTextColor ?? textColor!
+            NSFontAttributeName: UIFont.systemFont(ofSize: 14, weight: UIFontWeightUltraLight),
+            NSForegroundColorAttributeName: UIColor.black.withAlphaComponent(0.5)
         ]
     }
 
@@ -145,21 +145,17 @@ open class ParkedTextField: UITextField {
 
     func commonInit() {
         
-        if let boldFont = font {
-            parkedTextFont = bold(boldFont)
-        } else {
-            parkedTextFont = font
-        }
-
-        parkedTextColor = textColor
-
+        parkedTextFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightUltraLight)
+        parkedTextColor = UIColor.black.withAlphaComponent(0.5)
+		self.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular)
+//		self.textColor = UIColor.black.withAlphaComponent(0.9)
         addTarget(self, action: #selector(ParkedTextField.textChanged(_:)), for: .editingChanged)
 
         text = ""
         prevText = text!
 
         typingState = .start
-		
+		layoutSubviews()
     }
 	
 	func setupBorder() {
@@ -167,7 +163,7 @@ open class ParkedTextField: UITextField {
 		
 		border.borderWidth = borderWidth
 		border.cornerRadius = borderWidth/2
-		border.masksToBounds = true
+//		border.masksToBounds = true
 		self.layer.addSublayer(border)
 		self.layer.masksToBounds = true
 	}
@@ -239,11 +235,6 @@ open class ParkedTextField: UITextField {
         selectedTextRange = textRange(from: textPosition, to: textPosition)
     }
 
-    func bold(_ font: UIFont) -> UIFont {
-        let descriptor = font.fontDescriptor.withSymbolicTraits(UIFontDescriptorSymbolicTraits.traitBold)
-        return UIFont(descriptor: descriptor!, size: 0)
-    }
-	
 	
 	override open func layoutSubviews() {
 		super.layoutSubviews()
