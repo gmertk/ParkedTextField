@@ -19,8 +19,6 @@ class TestViewController: UIViewController, UITextFieldDelegate {
 		view.addSubview(urlTextField)
 		urlTextField.frame.origin = CGPoint(x: 0, y: 0)
 		urlTextField.frame.size = CGSize(width: 300, height: 100)
-		urlTextField.borderWidth = 10.0
-		urlTextField.borderColor = UIColor.red
 		urlTextField.textAlignment = .center
 		// Do any additional setup after loading the view.
 		urlTextField.addTarget(self, action: #selector(TestViewController.chalJaBC), for: .editingChanged)

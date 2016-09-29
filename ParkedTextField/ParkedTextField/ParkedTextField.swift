@@ -14,13 +14,13 @@ open class ParkedTextField: UITextField {
 
 	let border = CALayer()
 	
-	@IBInspectable open var borderColor: UIColor = UIColor.purple {
+	@IBInspectable open var borderColor: UIColor = UIColor(red:0.82, green:0.84, blue:0.84, alpha:1.00) {
 		didSet {
 			setupBorder()
 		}
 	} 
 	
-	@IBInspectable open var borderWidth: CGFloat = 10 {
+	@IBInspectable open var borderWidth: CGFloat = 2 {
 		didSet {
 			setupBorder()
 		}
@@ -97,8 +97,8 @@ open class ParkedTextField: UITextField {
     /// Attributes wrapper for font and color of parkedText
     open var parkedTextAttributes: [String: NSObject] {
         return [
-            NSFontAttributeName: UIFont.systemFont(ofSize: 14, weight: UIFontWeightUltraLight),
-            NSForegroundColorAttributeName: UIColor.black.withAlphaComponent(0.5)
+            NSFontAttributeName: UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular),
+            NSForegroundColorAttributeName: UIColor(red:0.51, green:0.55, blue:0.58, alpha:1.00)
         ]
     }
 
@@ -144,17 +144,17 @@ open class ParkedTextField: UITextField {
     }
 
     func commonInit() {
-        
-        parkedTextFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightUltraLight)
-        parkedTextColor = UIColor.black.withAlphaComponent(0.5)
+		
 		self.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular)
-//		self.textColor = UIColor.black.withAlphaComponent(0.9)
+		self.textColor = UIColor(red:0.75, green:0.77, blue:0.78, alpha:1.00)
         addTarget(self, action: #selector(ParkedTextField.textChanged(_:)), for: .editingChanged)
 
         text = ""
         prevText = text!
 
         typingState = .start
+		
+		self.tintColor = UIColor(red:0.31, green:0.69, blue:0.80, alpha:0.6)
 		layoutSubviews()
     }
 	
@@ -163,7 +163,6 @@ open class ParkedTextField: UITextField {
 		
 		border.borderWidth = borderWidth
 		border.cornerRadius = borderWidth/2
-//		border.masksToBounds = true
 		self.layer.addSublayer(border)
 		self.layer.masksToBounds = true
 	}
