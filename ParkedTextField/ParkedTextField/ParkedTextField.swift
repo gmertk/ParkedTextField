@@ -13,8 +13,12 @@ open class ParkedTextField: UITextField {
     // MARK: Properties
 
 	let border = CALayer()
+	static let blueTintColor = UIColor(red:0.31, green:0.69, blue:0.80, alpha:0.6)
+	static let grayBorderColor = UIColor(red:0.82, green:0.84, blue:0.84, alpha:1.00)
+	static let grayParkedColor = UIColor(red:0.51, green:0.55, blue:0.58, alpha:1.00)
+	static let grayTextColor = UIColor(red:0.75, green:0.77, blue:0.78, alpha:1.00)
 	
-	@IBInspectable open var borderColor: UIColor = UIColor(red:0.82, green:0.84, blue:0.84, alpha:1.00) {
+	@IBInspectable open var borderColor: UIColor = ParkedTextField.grayBorderColor {
 		didSet {
 			setupBorder()
 		}
@@ -98,7 +102,7 @@ open class ParkedTextField: UITextField {
     open var parkedTextAttributes: [String: NSObject] {
         return [
             NSFontAttributeName: UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular),
-            NSForegroundColorAttributeName: UIColor(red:0.51, green:0.55, blue:0.58, alpha:1.00)
+            NSForegroundColorAttributeName: ParkedTextField.grayParkedColor
         ]
     }
 
@@ -146,15 +150,15 @@ open class ParkedTextField: UITextField {
     func commonInit() {
 		
 		self.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular)
-		self.textColor = UIColor(red:0.75, green:0.77, blue:0.78, alpha:1.00)
-        addTarget(self, action: #selector(ParkedTextField.textChanged(_:)), for: .editingChanged)
+		self.textColor = ParkedTextField.grayTextColor
+		addTarget(self, action: #selector(ParkedTextField.textChanged(_:)), for: .editingChanged)
 
         text = ""
         prevText = text!
 
         typingState = .start
 		
-		self.tintColor = UIColor(red:0.31, green:0.69, blue:0.80, alpha:0.6)
+		self.tintColor = ParkedTextField.blueTintColor
 		layoutSubviews()
     }
 	
@@ -249,7 +253,7 @@ open class ParkedTextField: UITextField {
 	}
 	
 	override open func editingRect(forBounds bounds: CGRect) -> CGRect {
-		return bounds.insetBy(dx: 20, dy: 0)
+		return bounds.insetBy(dx: 0, dy: 0)
 	}
 
 }
