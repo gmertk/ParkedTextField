@@ -15,10 +15,10 @@ class TestViewController: UIViewController, UITextFieldDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		urlTextField.parkedText = ".kayako.com"
-		urlTextField.placeholderText = "Your company here "
+		urlTextField.placeholderText = "Your domain"
 		view.addSubview(urlTextField)
-		urlTextField.frame.origin = CGPoint(x: 0, y: 0)
-		urlTextField.frame.size = CGSize(width: 300, height: 34)
+		urlTextField.frame.origin = CGPoint(x: 0, y: 40)
+		urlTextField.frame.size = CGSize(width: 300, height: 100)
 		urlTextField.textAlignment = .left
 		// Do any additional setup after loading the view.
 		urlTextField.addTarget(self, action: #selector(TestViewController.chalJaBC), for: .editingChanged)
@@ -32,7 +32,7 @@ class TestViewController: UIViewController, UITextFieldDelegate {
 				urlTextField.parkedText = ""
 				urlTextField.text = result
 				isSub = true
-				urlTextField.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+				urlTextField.font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)
 				urlTextField.textColor = UIColor.black
 			}
 		}

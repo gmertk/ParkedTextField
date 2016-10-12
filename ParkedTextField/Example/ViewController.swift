@@ -17,7 +17,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let progress = UIProgressView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 2))
+		progress.progressViewStyle = .bar
+		view.addSubview(progress)
+		
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(3)) { 
+			progress.setProgress(0.5, animated: true)
+		}
+		
         slackTextField.parkedText = ".slack.com"
         slackTextField.placeholderText = "yourteam"
     }

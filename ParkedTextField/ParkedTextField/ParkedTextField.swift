@@ -101,7 +101,7 @@ open class ParkedTextField: UITextField {
     /// Attributes wrapper for font and color of parkedText
     open var parkedTextAttributes: [String: NSObject] {
         return [
-            NSFontAttributeName: UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular),
+            NSFontAttributeName: UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular),
             NSForegroundColorAttributeName: ParkedTextField.grayParkedColor
         ]
     }
@@ -149,7 +149,7 @@ open class ParkedTextField: UITextField {
 
     func commonInit() {
 		
-		self.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightRegular)
+		self.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
 		self.textColor = ParkedTextField.grayTextColor
 		addTarget(self, action: #selector(ParkedTextField.textChanged(_:)), for: .editingChanged)
 
