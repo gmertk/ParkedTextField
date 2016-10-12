@@ -16,7 +16,7 @@ open class ParkedTextField: UITextField {
 	static let blueTintColor = UIColor(red:0.31, green:0.69, blue:0.80, alpha:0.6)
 	static let grayBorderColor = UIColor(red:0.82, green:0.84, blue:0.84, alpha:1.00)
 	static let grayParkedColor = UIColor(red:0.51, green:0.55, blue:0.58, alpha:1.00)
-	static let grayTextColor = UIColor(red:0.75, green:0.77, blue:0.78, alpha:1.00)
+	static let grayTextColor = UIColor(red:0.23, green:0.25, blue:0.28, alpha:1.00)
 	
 	@IBInspectable open var borderColor: UIColor = ParkedTextField.grayBorderColor {
 		didSet {
