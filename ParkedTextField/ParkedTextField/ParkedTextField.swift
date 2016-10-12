@@ -8,12 +8,31 @@
 
 import UIKit
 
-public class ParkedTextField: UITextField {
+open class ParkedTextField: UITextField {
 
     // MARK: Properties
 
+	let border = CALayer()
+	static let blueTintColor = UIColor(red:0.31, green:0.69, blue:0.80, alpha:0.6)
+	static let grayBorderColor = UIColor(red:0.82, green:0.84, blue:0.84, alpha:1.00)
+	static let grayParkedColor = UIColor(red:0.51, green:0.55, blue:0.58, alpha:1.00)
+	static let grayTextColor = UIColor(red:0.23, green:0.25, blue:0.28, alpha:1.00)
+	
+	@IBInspectable open var borderColor: UIColor = ParkedTextField.grayBorderColor {
+		didSet {
+			setupBorder()
+		}
+	} 
+	
+	@IBInspectable open var borderWidth: CGFloat = 2 {
+		didSet {
+			setupBorder()
+		}
+	}
+	
+	
     /// Constant part of the text. Defaults to "".
-    @IBInspectable public var parkedText: String {
+    @IBInspectable open var parkedText: String {
         get {
             return _parkedText
         }
@@ -22,7 +41,7 @@ public class ParkedTextField: UITextField {
                 return
             }
             if !text.isEmpty {
-                let typed = text[text.startIndex..<text.endIndex.advancedBy(-self.parkedText.characters.count)]
+                let typed = text[text.startIndex..<text.characters.index(text.endIndex, offsetBy: -self.parkedText.characters.count)]
                 text = typed + newValue
 
                 prevText =  text
@@ -40,13 +59,13 @@ public class ParkedTextField: UITextField {
     var _parkedText = ""
 
     /// Variable part of the text. Defaults to "".
-    @IBInspectable public var typedText: String {
+    @IBInspectable open var typedText: String {
         get {
             guard let text = text else {
                 return ""
             }
             if text.hasSuffix(parkedText) {
-                return text[text.startIndex..<text.endIndex.advancedBy(-parkedText.characters.count)]
+                return text[text.startIndex..<text.characters.index(text.endIndex, offsetBy: -parkedText.characters.count)]
             } else {
                 return text
             }
@@ -58,7 +77,7 @@ public class ParkedTextField: UITextField {
     }
 
     /// Placeholder before parkedText. Defaults to "".
-    @IBInspectable public var placeholderText: String = "" {
+    @IBInspectable open var placeholderText: String = "" {
         didSet {
             placeholder = placeholderText + parkedText
         }
@@ -66,28 +85,28 @@ public class ParkedTextField: UITextField {
 
 
     /// Constant part of the text. Defaults to the text field's font.
-    public var parkedTextFont: UIFont! {
+    open var parkedTextFont: UIFont! {
         didSet {
             parkedText += ""
         }
     }
 
     /// Constant part of the text. Defaults to the text field's textColor.
-    @IBInspectable public var parkedTextColor: UIColor! {
+    @IBInspectable open var parkedTextColor: UIColor! {
         didSet {
             parkedText += ""
         }
     }
 
     /// Attributes wrapper for font and color of parkedText
-    var parkedTextAttributes: [String: NSObject] {
+    open var parkedTextAttributes: [String: NSObject] {
         return [
-            NSFontAttributeName: parkedTextFont,
-            NSForegroundColorAttributeName: parkedTextColor ?? textColor
+            NSFontAttributeName: UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular),
+            NSForegroundColorAttributeName: ParkedTextField.grayParkedColor
         ]
     }
 
-    public override var placeholder: String? {
+    open override var placeholder: String? {
         didSet {
             if let placeholder = placeholder {
                 let attributedString = NSMutableAttributedString(string: placeholder)
@@ -101,13 +120,13 @@ public class ParkedTextField: UITextField {
     }
 
     enum TypingState {
-        case Start, Typed
+        case start, typed
     }
-    var typingState = TypingState.Start
+    var typingState = TypingState.start
 
     var beginningOfParkedText: UITextPosition? {
         get {
-            return positionFromPosition(endOfDocument, offset: -parkedText.characters.count)
+            return position(from: endOfDocument, offset: -parkedText.characters.count)
         }
     }
 
@@ -119,47 +138,55 @@ public class ParkedTextField: UITextField {
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
+		setupBorder()
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
+		setupBorder()
     }
 
     func commonInit() {
-        
-        if let boldFont = font {
-            parkedTextFont = bold(boldFont)
-        } else {
-            parkedTextFont = font
-        }
-
-        parkedTextColor = textColor
-
-        addTarget(self, action: "textChanged:", forControlEvents: .EditingChanged)
+		
+		self.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
+		self.textColor = ParkedTextField.grayTextColor
+		addTarget(self, action: #selector(ParkedTextField.textChanged(_:)), for: .editingChanged)
 
         text = ""
         prevText = text!
 
-        typingState = .Start
+        typingState = .start
+		
+		self.tintColor = ParkedTextField.blueTintColor
+		layoutSubviews()
     }
+	
+	func setupBorder() {
+		border.borderColor = self.borderColor.cgColor
+		
+		border.borderWidth = borderWidth
+		border.cornerRadius = borderWidth/2
+		self.layer.addSublayer(border)
+		self.layer.masksToBounds = true
+	}
 
 
     // MARK: EditingChanged handler
 
-    func textChanged(sender: UITextField) {
+    func textChanged(_ sender: UITextField) {
         switch typingState {
-        case .Start where text!.characters.count > 0:
+        case .start where text!.characters.count > 0:
             text = typedText + parkedText
             updateAttributedTextWith(text!)
             prevText = text!
             goToBeginningOfParkedText()
 
-            typingState = .Typed
+            typingState = .typed
 
-        case .Typed:
+        case .typed:
             if text == parkedText {
-                typingState = .Start
+                typingState = .start
                 text = ""
                 return
             }
@@ -178,8 +205,8 @@ public class ParkedTextField: UITextField {
     }
 
     // MARK: Utilites
-    func updateAttributedTextWith(text: String) {
-        if let parkedTextRange = text.rangeOfString(parkedText, options: NSStringCompareOptions.BackwardsSearch, range: nil, locale: nil) {
+    func updateAttributedTextWith(_ text: String) {
+        if let parkedTextRange = text.range(of: parkedText, options: NSString.CompareOptions.backwards, range: nil, locale: nil) {
             let nsRange = NSRangeFromRange(text, range: parkedTextRange)
 
             let attributedString = NSMutableAttributedString(string: text)
@@ -190,12 +217,14 @@ public class ParkedTextField: UITextField {
     }
 
     /// http://stackoverflow.com/questions/25138339/nsrange-to-rangestring-index
-    func NSRangeFromRange(text:String, range : Range<String.Index>) -> NSRange {
+    func NSRangeFromRange(_ text:String, range : Range<String.Index>) -> NSRange {
         let utf16view = text.utf16
-        let from = String.UTF16View.Index(range.startIndex, within: utf16view)
-        let to = String.UTF16View.Index(range.endIndex, within: utf16view)
-        let loc = utf16view.startIndex.distanceTo(from)
-        let len = from.distanceTo(to)
+        let from = String.UTF16View.Index(range.lowerBound, within: utf16view)
+        let to = String.UTF16View.Index(range.upperBound, within: utf16view)
+		
+
+        let loc = utf16view.startIndex.distance(to: from)
+        let len = from.distance(to: to)
         return NSMakeRange(loc, len)
     }
 
@@ -205,12 +234,26 @@ public class ParkedTextField: UITextField {
         }
     }
 
-    func goToTextPosition(textPosition: UITextPosition!) {
-        selectedTextRange = textRangeFromPosition(textPosition, toPosition: textPosition)
+    func goToTextPosition(_ textPosition: UITextPosition!) {
+        selectedTextRange = textRange(from: textPosition, to: textPosition)
     }
 
-    func bold(font: UIFont) -> UIFont {
-        let descriptor = font.fontDescriptor().fontDescriptorWithSymbolicTraits(UIFontDescriptorSymbolicTraits.TraitBold)
-        return UIFont(descriptor: descriptor, size: 0)
-    }
+	
+	override open func layoutSubviews() {
+		super.layoutSubviews()
+		border.frame = CGRect(x: 0, y: self.frame.size.height - borderWidth, width:  self.frame.size.width, height: borderWidth)
+	}
+	
+	override open func textRect(forBounds bounds: CGRect) -> CGRect {
+		return editingRect(forBounds: bounds)
+	}
+	
+	override open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+		return editingRect(forBounds: bounds)
+	}
+	
+	override open func editingRect(forBounds bounds: CGRect) -> CGRect {
+		return bounds.insetBy(dx: 0, dy: 0)
+	}
+
 }

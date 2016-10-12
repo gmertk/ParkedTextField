@@ -17,17 +17,24 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let progress = UIProgressView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 2))
+		progress.progressViewStyle = .bar
+		view.addSubview(progress)
+		
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(3)) { 
+			progress.setProgress(0.5, animated: true)
+		}
+		
         slackTextField.parkedText = ".slack.com"
         slackTextField.placeholderText = "yourteam"
     }
     
-    @IBAction func valueChanged(sender: ParkedTextField) {
+    @IBAction func valueChanged(_ sender: ParkedTextField) {
         print("text = " + sender.text!)
         print("typedText = " + sender.typedText)
     }
     
-    @IBAction func changeParkedText(sender: AnyObject) {
+    @IBAction func changeParkedText(_ sender: AnyObject) {
         let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
         gmailTextField.parkedText = texts[j]
         
@@ -35,7 +42,7 @@ class ViewController: UIViewController {
     }
     
     
-    @IBAction func changeNotParkedText(sender: AnyObject) {
+    @IBAction func changeNotParkedText(_ sender: AnyObject) {
         let texts = ["ios-developers", "larry", "bill", "mark"]
         gmailTextField.typedText = texts[i]
         
