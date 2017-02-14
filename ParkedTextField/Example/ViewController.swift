@@ -27,6 +27,13 @@ class ViewController: UIViewController {
         print("typedText = " + sender.typedText)
     }
     
+    @IBAction func changeNotParkedText(sender: AnyObject) {
+        let texts = ["ios-developers", "larry", "bill", "mark"]
+        gmailTextField.typedText = texts[i]
+        
+        i = (i + 1) % texts.count
+    }
+    
     @IBAction func changeParkedText(sender: AnyObject) {
         let texts = [".slack.com", "@gmail.com", "@hotmail.com", "@facebook.com"]
         gmailTextField.parkedText = texts[j]
@@ -34,11 +41,4 @@ class ViewController: UIViewController {
         j = (j + 1) % texts.count
     }
     
-    
-    @IBAction func changeNotParkedText(sender: AnyObject) {
-        let texts = ["ios-developers", "larry", "bill", "mark"]
-        gmailTextField.typedText = texts[i]
-        
-        i = (i + 1) % texts.count
-    }
 }
