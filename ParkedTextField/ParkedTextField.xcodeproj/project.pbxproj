@@ -15,6 +15,7 @@
 		A5EACD401B6247CA006E8A67 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5EACD3E1B6247CA006E8A67 /* LaunchScreen.xib */; };
 		A5EACD4C1B6247CA006E8A67 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EACD4B1B6247CA006E8A67 /* ExampleTests.swift */; };
 		A5EACD561B62491C006E8A67 /* ParkedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EACD551B62491C006E8A67 /* ParkedTextField.swift */; };
+		D9BD54111E566335007077FB /* ParkedTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5EACD0F1B624754006E8A67 /* ParkedTextField.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,6 +25,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A5EACD301B6247CA006E8A67;
 			remoteInfo = Example;
+		};
+		D9BD54121E56633B007077FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A5EACD061B624754006E8A67 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A5EACD0E1B624754006E8A67;
+			remoteInfo = ParkedTextField;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -56,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9BD54111E566335007077FB /* ParkedTextField.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +197,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D9BD54131E56633B007077FB /* PBXTargetDependency */,
 			);
 			name = Example;
 			productName = Example;
@@ -219,7 +229,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Gunay Mert Karadogan";
 				TargetAttributes = {
 					A5EACD0E1B624754006E8A67 = {
@@ -316,6 +326,11 @@
 			target = A5EACD301B6247CA006E8A67 /* Example */;
 			targetProxy = A5EACD461B6247CA006E8A67 /* PBXContainerItemProxy */;
 		};
+		D9BD54131E56633B007077FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A5EACD0E1B624754006E8A67 /* ParkedTextField */;
+			targetProxy = D9BD54121E56633B007077FB /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -351,8 +366,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -400,8 +417,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -421,6 +440,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -431,7 +451,7 @@
 		A5EACD261B624754006E8A67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -450,6 +470,7 @@
 		A5EACD271B624754006E8A67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;

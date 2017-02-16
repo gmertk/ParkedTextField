@@ -194,8 +194,8 @@ open class ParkedTextField: UITextField {
         let utf16view = text.utf16
         let from = String.UTF16View.Index(range.lowerBound, within: utf16view)
         let to = String.UTF16View.Index(range.upperBound, within: utf16view)
-        let loc = utf16view.startIndex.distanceTo(from)
-        let len = from.distanceTo(to)
+        let loc = utf16view.startIndex.distance(to: from)
+        let len = from.distance(to: to)
         return NSMakeRange(loc, len)
     }
 
