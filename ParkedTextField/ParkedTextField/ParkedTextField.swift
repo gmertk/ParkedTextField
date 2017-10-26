@@ -46,7 +46,7 @@ open class ParkedTextField: UITextField {
                 return ""
             }
             if text.hasSuffix(parkedText) {
-                return text[text.startIndex..<text.characters.index(text.endIndex, offsetBy: -parkedText.characters.count)]
+                return String(text[text.startIndex..<text.characters.index(text.endIndex, offsetBy: -parkedText.characters.count)])
             } else {
                 return text
             }
@@ -66,7 +66,7 @@ open class ParkedTextField: UITextField {
     
     
     /// Constant part of the text. Defaults to the text field's font.
-    open var parkedTextFont: UIFont! {
+    @objc open var parkedTextFont: UIFont! {
         didSet {
             parkedText += ""
         }
@@ -80,10 +80,10 @@ open class ParkedTextField: UITextField {
     }
     
     /// Attributes wrapper for font and color of parkedText
-    var parkedTextAttributes: [String: NSObject] {
+    var parkedTextAttributes: [NSAttributedStringKey: NSObject] {
         return [
-            NSFontAttributeName: parkedTextFont,
-            NSForegroundColorAttributeName: parkedTextColor ?? textColor!
+            NSAttributedStringKey.font: parkedTextFont,
+            NSAttributedStringKey.foregroundColor: parkedTextColor ?? textColor!
         ]
     }
     
@@ -147,7 +147,7 @@ open class ParkedTextField: UITextField {
     
     // MARK: EditingChanged handler
     
-    func textChanged(_ sender: UITextField) {
+    @objc func textChanged(_ sender: UITextField) {
         switch typingState {
         case .start where text!.characters.count > 0:
             text = typedText + parkedText
@@ -208,8 +208,10 @@ open class ParkedTextField: UITextField {
 // https://stackoverflow.com/a/30404532/805882
 fileprivate extension String {
     func nsRange(from range: Range<String.Index>) -> NSRange {
-        let from = range.lowerBound.samePosition(in: utf16)
-        let to = range.upperBound.samePosition(in: utf16)
+        guard let from = range.lowerBound.samePosition(in: utf16),
+            let to = range.upperBound.samePosition(in: utf16) else {
+            return NSRange(location: NSNotFound, length: 0)
+        }
         return NSRange(location: utf16.distance(from: utf16.startIndex, to: from),
                        length: utf16.distance(from: from, to: to))
     }
