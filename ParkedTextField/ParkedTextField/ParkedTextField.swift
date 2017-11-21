@@ -22,7 +22,7 @@ open class ParkedTextField: UITextField {
                 return
             }
             if !text.isEmpty {
-                let typed = text[text.startIndex..<text.characters.index(text.endIndex, offsetBy: -self.parkedText.characters.count)]
+                let typed = text[text.startIndex..<text.index(text.endIndex, offsetBy: -self.parkedText.count)]
                 text = typed + newValue
                 
                 prevText =  text
@@ -46,7 +46,7 @@ open class ParkedTextField: UITextField {
                 return ""
             }
             if text.hasSuffix(parkedText) {
-                return String(text[text.startIndex..<text.characters.index(text.endIndex, offsetBy: -parkedText.characters.count)])
+                return String(text[text.startIndex..<text.index(text.endIndex, offsetBy: -parkedText.count)])
             } else {
                 return text
             }
@@ -91,7 +91,7 @@ open class ParkedTextField: UITextField {
         didSet {
             if let placeholder = placeholder {
                 let attributedString = NSMutableAttributedString(string: placeholder)
-                let parkedTextRange = NSMakeRange(placeholderText.characters.count, parkedText.characters.count)
+                let parkedTextRange = NSMakeRange(placeholderText.count, parkedText.count)
                 if placeholder.hasSuffix(parkedText) {
                     attributedString.addAttributes(parkedTextAttributes, range: parkedTextRange)
                     attributedPlaceholder = attributedString
@@ -107,7 +107,7 @@ open class ParkedTextField: UITextField {
     
     var beginningOfParkedText: UITextPosition? {
         get {
-            return position(from: endOfDocument, offset: -parkedText.characters.count)
+            return position(from: endOfDocument, offset: -parkedText.count)
         }
     }
     
@@ -149,7 +149,7 @@ open class ParkedTextField: UITextField {
     
     @objc func textChanged(_ sender: UITextField) {
         switch typingState {
-        case .start where text!.characters.count > 0:
+        case .start where text!.count > 0:
             text = typedText + parkedText
             updateAttributedTextWith(text!)
             prevText = text!
