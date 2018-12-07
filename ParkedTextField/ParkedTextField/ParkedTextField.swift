@@ -80,10 +80,10 @@ open class ParkedTextField: UITextField {
     }
     
     /// Attributes wrapper for font and color of parkedText
-    var parkedTextAttributes: [NSAttributedStringKey: NSObject] {
+    var parkedTextAttributes: [NSAttributedString.Key: NSObject] {
         return [
-            NSAttributedStringKey.font: parkedTextFont,
-            NSAttributedStringKey.foregroundColor: parkedTextColor ?? textColor!
+            NSAttributedString.Key.font: parkedTextFont,
+            NSAttributedString.Key.foregroundColor: parkedTextColor ?? textColor!
         ]
     }
     
@@ -200,7 +200,7 @@ open class ParkedTextField: UITextField {
     }
     
     func bold(_ font: UIFont) -> UIFont {
-        let descriptor = font.fontDescriptor.withSymbolicTraits(UIFontDescriptorSymbolicTraits.traitBold)
+        let descriptor = font.fontDescriptor.withSymbolicTraits(UIFontDescriptor.SymbolicTraits.traitBold)
         return UIFont(descriptor: descriptor!, size: 0)
     }
 }
