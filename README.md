@@ -15,7 +15,7 @@ Main functionality works. It is still under development.
 
 ## Usage
 
-ParkedTextField is available through [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/carthage/carthage). To install
+ParkedTextField is available through [CocoaPods](http://cocoapods.org), [Carthage](https://github.com/carthage/carthage), and [Swift Package Manager](https://swift.org/package-manager/). To install
 it, simply add the following lines to your Podfile:
 
 ```ruby
@@ -28,6 +28,12 @@ Or add the following lines to your Cartfile:
 ```bash
 github "gmertk/ParkedTextField" "master"
 ``` 
+
+Or for Swift Package Manager:
+1. In Xcode, open your project and navigate to File → Swift Packages → Add Package Dependency...
+2. Paste the repository URL (https://github.com/gmertk/ParkedTextField) and click Next.
+3. For Rules, select Branch (with branch set to `master`).
+4. Click Finish.
 
 ## Setup
 
