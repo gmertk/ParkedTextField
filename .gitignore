@@ -62,3 +62,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+## Swift Package Manager
+# Packages/
+.build/
+
